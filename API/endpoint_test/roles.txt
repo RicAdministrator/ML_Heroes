@@ -1,0 +1,21 @@
+GET http://localhost:3001/api/roles
+
+DEL http://localhost:3001/api/roles/3
+
+POST http://localhost:3001/api/roles
+Body > raw
+{
+    "role":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "logo_url":"",
+    "primary_function": "",
+    "key_attributes": "" 
+}
+
+PUT http://localhost:3001/api/roles/26
+Body > raw
+{
+    "role":"Lorem",
+    "logo_url":"https://akmweb.youngjoygame.com/web/svnres/img/mlbb/homepage/100_85d213390613bbc09220cf1d9f64c5c0.png",
+    "primary_function": "Lorem",
+    "key_attributes": "Lorem" 
+}

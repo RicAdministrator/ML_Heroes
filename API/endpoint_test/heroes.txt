@@ -1,0 +1,27 @@
+GET http://localhost:3001/api/heroes
+
+DELETE http://localhost:3001/api/heroes/6
+
+POST http://localhost:3001/api/heroes
+Body > raw
+{
+    "name": "Test2",
+    "image_url": "Test2",
+    "roles": [
+        1,
+        2,
+        3
+    ],
+    "description": "Test2"
+}
+
+PUT http://localhost:3001/api/heroes/19
+Body > raw
+{
+    "name": "updated 2",
+    "image_url": "updated 2",
+    "roles": [
+        3
+    ],
+    "description": "updated 2"
+}
