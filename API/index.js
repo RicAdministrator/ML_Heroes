@@ -44,21 +44,22 @@ app.post('/api/roles', (req, res) => {
 
             var sql = `INSERT INTO roles (role, logo_url, primary_function, key_attributes) VALUES ('${req.body.role}', '${req.body.logo_url}', '${req.body.primary_function}', '${req.body.key_attributes}')`
 
-            con.query(sql, function (err, result) {
+            con.query(sql, function (err, resultInsert) {
                 if (err) {
                     console.error(err);
                     return res.status(500).send("Database error");
                 }
+
+                const role = {
+                    id: resultInsert.insertId,
+                    role: req.body.role,
+                    logo_url: req.body.logo_url,
+                    primary_function: req.body.primary_function,
+                    key_attributes: req.body.key_attributes
+                };
+
+                res.send(role);
             });
-
-            const role = {
-                role: req.body.role,
-                logo_url: req.body.logo_url,
-                primary_function: req.body.primary_function,
-                key_attributes: req.body.key_attributes
-            };
-
-            res.send(role);
         }
     });
 });
@@ -89,6 +90,7 @@ app.put('/api/roles/:id', (req, res) => {
     });
 
     const role = {
+        id: parseInt(req.params.id),
         role: req.body.role,
         logo_url: req.body.logo_url,
         primary_function: req.body.primary_function,
