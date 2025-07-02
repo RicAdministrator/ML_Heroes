@@ -41,8 +41,21 @@ app.post('/api/roles', (req, res) => {
             return res.status(400).send(resJSON);
         }
         else {
-
-            var sql = `INSERT INTO roles (role, logo_url, primary_function, key_attributes) VALUES ('${req.body.role}', '${req.body.logo_url}', '${req.body.primary_function}', '${req.body.key_attributes}')`
+            const sql = `
+                INSERT INTO roles 
+                (
+                    role, 
+                    logo_url, 
+                    primary_function, 
+                    key_attributes
+                ) 
+                VALUES 
+                (
+                    '${req.body.role}', 
+                    '${req.body.logo_url}', 
+                    '${req.body.primary_function}', 
+                    '${req.body.key_attributes}'
+                )`
 
             con.query(sql, function (err, resultInsert) {
                 if (err) {
@@ -66,7 +79,7 @@ app.post('/api/roles', (req, res) => {
 
 // roles > retrieve all
 app.get('/api/roles', (req, res) => {
-    con.query("SELECT * FROM roles", function (err, result, fields) {
+    con.query("SELECT * FROM roles ORDER BY role", function (err, result, fields) {
         if (err) {
             console.error(err);
             return res.status(500).send("Database error");
@@ -80,7 +93,16 @@ app.put('/api/roles/:id', (req, res) => {
     const { error } = validateRole(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    var sql = `UPDATE roles SET role = '${req.body.role}', logo_url = '${req.body.logo_url}', primary_function = '${req.body.primary_function}', key_attributes = '${req.body.key_attributes}' WHERE id = ${parseInt(req.params.id)}`;
+    const sql = `
+        UPDATE 
+            roles 
+        SET 
+            role = '${req.body.role}', 
+            logo_url = '${req.body.logo_url}', 
+            primary_function = '${req.body.primary_function}', 
+            key_attributes = '${req.body.key_attributes}' 
+        WHERE 
+            id = ${parseInt(req.params.id)}`;
 
     con.query(sql, function (err, result) {
         if (err) {
@@ -116,7 +138,19 @@ app.delete('/api/roles/:id', (req, res) => {
 
 // heroes > create
 app.post('/api/heroes', (req, res) => {
-    var sql = `INSERT INTO heroes (name, image_url, description) VALUES ('${req.body.name}', '${req.body.image_url}', '${req.body.description}')`
+    const sql = `
+        INSERT INTO heroes 
+        (
+            name, 
+            image_url, 
+            description
+        ) 
+        VALUES 
+        (
+            '${req.body.name}', 
+            '${req.body.image_url}', 
+            '${req.body.description}'
+        )`
 
     con.query(sql, function (err, result) {
         if (err) {
@@ -144,20 +178,42 @@ app.post('/api/heroes', (req, res) => {
                     console.error(errHeroRoles);
                     return res.status(500).send("Database error");
                 }
+
+                const hero = {
+                    id: result.insertId,
+                    name: req.body.name,
+                    image_url: req.body.image_url,
+                    roles: req.body.rolesDisplay,
+                    description: req.body.description
+                };
+
+                res.send(hero);
             });
         }
     });
-
-    const hero = {
-        name: req.body.name,
-    };
-
-    res.send(hero);
 });
 
 // heroes > retrieve all
 app.get('/api/heroes', (req, res) => {
-    const sql = `SELECT h.id, h.name, h.image_url, tbl.roles, h.description FROM heroes h INNER JOIN (SELECT hero_id, GROUP_CONCAT(r.role SEPARATOR ' / ') AS roles FROM hero_roles hr INNER JOIN roles r ON hr.role_id = r.id GROUP BY hero_id) tbl ON h.id = tbl.hero_id;`
+    const sql = `
+        SELECT 
+            h.id, 
+            h.name, 
+            h.image_url, 
+            tbl.roles, 
+            h.description 
+        FROM 
+            heroes h INNER JOIN 
+            (
+                SELECT 
+                    hero_id, 
+                    GROUP_CONCAT(r.role ORDER BY r.role SEPARATOR ' / ') AS roles 
+                FROM 
+                    hero_roles hr INNER JOIN 
+                    roles r ON hr.role_id = r.id 
+                GROUP BY 
+                    hero_id
+            ) tbl ON h.id = tbl.hero_id;`
 
     con.query(sql, function (err, result, fields) {
         if (err) {
@@ -170,8 +226,15 @@ app.get('/api/heroes', (req, res) => {
 
 // heroes > update by id
 app.put('/api/heroes/:id', (req, res) => {
-    var sql = `UPDATE heroes SET name = '${req.body.name}', image_url = '${req.body.image_url}', 
-        description = '${req.body.description}' WHERE id = ${parseInt(req.params.id)}`;
+    const sql = `
+        UPDATE 
+            heroes 
+        SET 
+            name = '${req.body.name}', 
+            image_url = '${req.body.image_url}', 
+            description = '${req.body.description}' 
+        WHERE 
+            id = ${parseInt(req.params.id)}`;
 
     con.query(sql, function (err, result) {
         if (err) {
@@ -181,7 +244,13 @@ app.put('/api/heroes/:id', (req, res) => {
 
         const selectedRoles = req.body.roles || [];
         if (selectedRoles) {
-            let sqlHeroRoles = `INSERT INTO hero_roles (hero_id, role_id) SELECT hero_id, role_id FROM (SELECT hr.id, toInsert.hero_id, toInsert.role_id FROM (`;
+            let sqlHeroRoles = `
+                INSERT INTO hero_roles 
+                (
+                    hero_id, 
+                    role_id
+                ) 
+                SELECT hero_id, role_id FROM (SELECT hr.id, toInsert.hero_id, toInsert.role_id FROM (`;
 
             for (let i = 0; i < selectedRoles.length; i++) {
 
@@ -200,20 +269,29 @@ app.put('/api/heroes/:id', (req, res) => {
                     return res.status(500).send("Database error");
                 }
 
-                const sqlDeleteHeroRoles = `DELETE FROM hero_roles WHERE hero_id = ${parseInt(req.params.id)} AND role_id NOT IN (${selectedRoles.join(",")});`;
+                const sqlDeleteHeroRoles = `
+                    DELETE FROM 
+                        hero_roles 
+                    WHERE 
+                        hero_id = ${parseInt(req.params.id)} AND 
+                        role_id NOT IN (${selectedRoles.join(",")});`;
 
-                con.query(sqlDeleteHeroRoles, function (errHeroRoles, resultHeroRoles) {
+                con.query(sqlDeleteHeroRoles, function (errHeroRoles, resultHeroRolesDelete) {
                     if (errHeroRoles) {
                         console.error(errHeroRoles);
                         return res.status(500).send("Database error");
                     }
+
+                    const hero = {
+                        id: req.params.id,
+                        name: req.body.name,
+                        image_url: req.body.image_url,
+                        roles: req.body.rolesDisplay,
+                        description: req.body.description
+                    };
+
+                    res.send(hero);
                 });
-
-                const hero = {
-                    name: req.body.name,
-                };
-
-                res.send(hero);
             });
         }
         else {
@@ -228,7 +306,7 @@ app.put('/api/heroes/:id', (req, res) => {
 
 // heroes > delete by id
 app.delete('/api/heroes/:id', (req, res) => {
-    var sql = "DELETE FROM heroes WHERE id = " + parseInt(req.params.id);
+    const sql = "DELETE FROM heroes WHERE id = " + parseInt(req.params.id);
 
     con.query(sql, function (err, result) {
         if (err) {

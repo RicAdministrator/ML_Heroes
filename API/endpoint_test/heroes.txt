@@ -1,27 +1,29 @@
 GET http://localhost:3001/api/heroes
 
-DELETE http://localhost:3001/api/heroes/6
+DELETE http://localhost:3001/api/heroes/7
 
 POST http://localhost:3001/api/heroes
 Body > raw
 {
-    "name": "Test2",
-    "image_url": "Test2",
+    "name": "new hero",
+    "image_url": "new hero",
     "roles": [
-        1,
-        2,
-        3
+        3,
+        2
     ],
-    "description": "Test2"
+    "rolesDisplay":"Assassin / Fighter",
+    "description": "new hero"
 }
 
-PUT http://localhost:3001/api/heroes/19
+PUT http://localhost:3001/api/heroes/7
 Body > raw
 {
-    "name": "updated 2",
-    "image_url": "updated 2",
+    "name": "new hero updated",
+    "image_url": "new hero updated",
     "roles": [
-        3
+        3,
+        5
     ],
-    "description": "updated 2"
+    "rolesDisplay":"Assassin / Marksman",
+    "description": "new hero updated"
 }
