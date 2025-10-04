@@ -3,6 +3,7 @@ GET http://localhost:3001/api/heroes
 DELETE http://localhost:3001/api/heroes/7
 
 POST http://localhost:3001/api/heroes
+Headers > Add > Key: Content-Type, Value: application/json
 Body > raw
 {
     "name": "new hero",
