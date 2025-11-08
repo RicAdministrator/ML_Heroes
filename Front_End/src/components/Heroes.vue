@@ -7,7 +7,7 @@
                 <h3>Success!</h3>
                 <p>{{ saveSuccessMsg ? saveSuccessMsg : deleteSuccessMsg }}</p>
             </div>
-            <table style="margin-top: 5px;">
+            <table id="tblHeroes" style="margin-top: 5px;">
                 <thead>
                     <tr style="background-color: #2196f3;">
                         <th>Image</th>

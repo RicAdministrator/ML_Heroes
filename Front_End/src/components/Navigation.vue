@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a v-for="x in navPages" class="w3-bar-item w3-button w3-hover-blue"
+        <a v-for="x in navPages" :id="'lnk' + x.label" class="w3-bar-item w3-button w3-hover-blue"
             v-bind:class="{ 'w3-hide-small': !appIsSmallScreen, 'w3-blue': appSelectedPage === x.value }"
             @click="setActivePage(x.value)">{{ x.label }}</a>
     </div>

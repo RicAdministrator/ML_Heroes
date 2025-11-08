@@ -2,7 +2,7 @@
     <div v-show="activeSection === 'search'">
         <p v-if="loading">Loading...</p>
         <div v-else>
-            <a class="link-style" @click="addClicked">Add Role</a>
+            <a id="lnkAddRole" class="link-style" @click="addClicked">Add Role</a>
             <div class="w3-panel w3-pale-green w3-border" v-show="saveSuccessMsg || deleteSuccessMsg">
                 <h3>Success!</h3>
                 <p>{{ saveSuccessMsg ? saveSuccessMsg : deleteSuccessMsg }}</p>
@@ -11,7 +11,7 @@
                 <h3>Please correct the following errors:</h3>
                 <p>{{ deleteErrorMsg }}</p>
             </div>
-            <table style="margin-top: 5px;">
+            <table id="tblRoles" style="margin-top: 5px;">
                 <thead>
                     <tr style="background-color: #2196f3;">
                         <th>Logo</th>
@@ -26,11 +26,11 @@
                         <td>
                             <img v-bind:src="role.logo_url" alt="Avatar" style="height:75px;" />
                         </td>
-                        <td>{{ role.role }}</td>
-                        <td>{{ role.primary_function }}</td>
-                        <td>{{ role.key_attributes }}</td>
+                        <td :id="'tdRolesRole' + role.id">{{ role.role }}</td>
+                        <td :id="'tdRolesPrimaryFunction' + role.id">{{ role.primary_function }}</td>
+                        <td :id="'tdRolesKeyAttributes' + role.id">{{ role.key_attributes }}</td>
                         <td>
-                            <button class="w3-btn w3-blue"
+                            <button :id="'btnUpdateRole' + role.id" class="w3-btn w3-blue"
                                 @click="updateClicked(role.id, role.role, role.logo_url, role.primary_function, role.key_attributes)">Update</button>
                             &nbsp;
                             <button class="w3-btn w3-blue" @click="deleteClicked(role.id)">Delete</button>
@@ -45,11 +45,11 @@
     <div v-show="activeSection === 'upsert'">
         <div class="w3-panel w3-pale-red w3-border" v-show="saveErrors">
             <h3>Please correct the following errors:</h3>
-            <p>{{ saveErrors }}</p>
+            <p id="pRoleSaveError">{{ saveErrors }}</p>
         </div>
         <div class="w3-card-4">
             <div class="w3-container w3-black" style="margin-bottom: 5px;">
-                <h2>{{ roleId ? 'Update Role' : 'Add Role' }}</h2>
+                <h2 id="h2Upsert">{{ roleId ? 'Update Role' : 'Add Role' }}</h2>
             </div>
             <form class="w3-container">
                 <div style="margin-bottom: 20px;">
@@ -72,8 +72,8 @@
                         v-model="keyAttributesModel">
                 </div>
                 <div style="margin-bottom: 10px">
-                    <button class="w3-btn w3-black" @click.prevent="saveClicked">Save</button>
-                    <button class="w3-btn w3-black" style="margin-left:5px;"
+                    <button id="btnSaveRole" class="w3-btn w3-black" @click.prevent="saveClicked">Save</button>
+                    <button id="btnCancelRole" class="w3-btn w3-black" style="margin-left:5px;"
                         @click.prevent="cancelClicked">Cancel</button>
                 </div>
             </form>

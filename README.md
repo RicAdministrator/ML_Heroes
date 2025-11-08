@@ -3,6 +3,11 @@
 ML_HEROES is a small project that uses VUE, RESTFUL API and MySQL.\
 It performs CRUD operations.
 
+## Database
+How to Drop Create DB:
+1. Open MySQL Workbench
+2. Run drop_create_db.sql
+
 ## API
 How to Run API and Test Endpoints:
 1. API > Open in Integrated Terminal > nodemon index
@@ -22,3 +27,13 @@ How to Generate and Test Production Files Using Vite:
 4. The Local url should appear, use the url to test the front end
 5. When you build your Vue project with Vite (or Webpack), your .vue files are transformed into JavaScript files. These compiled JS files, along with CSS and other assets, are bundled and placed in the dist folder. The original .vue files are not included in the dist folder. Only the optimized, production-ready JS, CSS, and static assets are.
 6. When you view the source of the pages, you will notice that the html uses the js and css files in dist\assets folder.
+
+## Selenium
+How to Test:
+1. Drop create db
+2. Run api
+3. Run front end
+4. Access http://localhost:5173/
+5. Make sure the front end loads
+6. Selenium > Open in Integrated Terminal
+7. npx mocha .\ml_heroes_test.spec.js
