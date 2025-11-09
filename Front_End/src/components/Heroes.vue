@@ -2,7 +2,7 @@
     <div v-show="activeSection === 'search'">
         <p v-if="loading">Loading...</p>
         <div v-else>
-            <a class="link-style" @click="addClicked">Add Heroes</a>
+            <a id="lnkAddHero" class="link-style" @click="addClicked">Add Heroes</a>
             <div class="w3-panel w3-pale-green w3-border" v-show="saveSuccessMsg || deleteSuccessMsg">
                 <h3>Success!</h3>
                 <p>{{ saveSuccessMsg ? saveSuccessMsg : deleteSuccessMsg }}</p>
@@ -22,14 +22,14 @@
                         <td>
                             <img v-bind:src="hero.image_url" alt="Avatar" style="height:150px;" />
                         </td>
-                        <td>{{ hero.name }}</td>
-                        <td>{{ hero.roles }}</td>
-                        <td>{{ hero.description }}</td>
+                        <td :id="'tdHeroName' + hero.id">{{ hero.name }}</td>
+                        <td :id="'tdHeroRoles' + hero.id">{{ hero.roles }}</td>
+                        <td :id="'tdHeroDescription' + hero.id">{{ hero.description }}</td>
                         <td>
-                            <button class="w3-btn w3-blue"
+                            <button :id="'btnUpdateHero' + hero.id" class="w3-btn w3-blue"
                                 @click="updateClicked(hero.id, hero.name, hero.image_url, hero.description, hero.roles)">Update</button>
                             &nbsp;
-                            <button class="w3-btn w3-blue" @click="deleteClicked(hero.id)">Delete</button>
+                            <button :id="'btnDeleteHero' + hero.id" class="w3-btn w3-blue" @click="deleteClicked(hero.id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -41,20 +41,20 @@
     <div v-show="activeSection === 'upsert'">
         <div class="w3-panel w3-pale-red w3-border" v-show="saveErrors">
             <h3>Please correct the following errors:</h3>
-            <p v-html="saveErrors"></p>
+            <p id="pHeroSaveError" v-html="saveErrors"></p>
         </div>
         <div class="w3-card-4">
             <div class="w3-container w3-black" style="margin-bottom: 5px;">
-                <h2>{{ heroId ? 'Update Hero' : 'Add Hero' }}</h2>
+                <h2 id="h2HeroUpsert">{{ heroId ? 'Update Hero' : 'Add Hero' }}</h2>
             </div>
             <form class="w3-container">
                 <div style="margin-bottom: 20px;">
-                    <label for="txtName">Name</label>
-                    <input id="txtName" class="w3-input w3-border" type="text" maxlength="50" v-model="nameModel">
+                    <label for="txtHeroName">Name</label>
+                    <input id="txtHeroName" class="w3-input w3-border" type="text" maxlength="50" v-model="nameModel">
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <label for="txtImageURL">Image URL</label>
-                    <input id="txtImageURL" class="w3-input w3-border" type="text" maxlength="150"
+                    <label for="txtHeroImageURL">Image URL</label>
+                    <input id="txtHeroImageURL" class="w3-input w3-border" type="text" maxlength="150"
                         v-model="logoImageModel">
                 </div>
                 <div style="margin-bottom: 20px;">
@@ -69,13 +69,13 @@
                     </div>
                 </div>
                 <div style="margin-bottom: 20px; clear:left; padding-top: 20px;">
-                    <label for="txtDescription">Description</label>
-                    <input id="txtDescription" class="w3-input w3-border" type="text" maxlength="150"
+                    <label for="txtHeroDescription">Description</label>
+                    <input id="txtHeroDescription" class="w3-input w3-border" type="text" maxlength="150"
                         v-model="descriptionModel">
                 </div>
                 <div style="margin-bottom: 10px">
-                    <button class="w3-btn w3-black" @click.prevent="saveClicked">Save</button>
-                    <button class="w3-btn w3-black" style="margin-left:5px;"
+                    <button id="btnSaveHero" class="w3-btn w3-black" @click.prevent="saveClicked">Save</button>
+                    <button id="btnCancelHero" class="w3-btn w3-black" style="margin-left:5px;"
                         @click.prevent="cancelClicked">Cancel</button>
                 </div>
             </form>
@@ -237,6 +237,9 @@ export default {
                     console.log('Item deleted successfully');
                     this.deleteSuccessMsg = "Hero was deleted successfully.";
                     this.loadHeroes();
+
+                    // scroll the browser window to the top
+                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                 } else {
                     console.error('Error deleting item:', response.statusText);
                 }

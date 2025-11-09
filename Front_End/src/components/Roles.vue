@@ -9,7 +9,7 @@
             </div>
             <div class="w3-panel w3-pale-red w3-border" v-show="deleteErrorMsg">
                 <h3>Please correct the following errors:</h3>
-                <p>{{ deleteErrorMsg }}</p>
+                <p id="pRoleDeleteMsg">{{ deleteErrorMsg }}</p>
             </div>
             <table id="tblRoles" style="margin-top: 5px;">
                 <thead>
@@ -33,7 +33,7 @@
                             <button :id="'btnUpdateRole' + role.id" class="w3-btn w3-blue"
                                 @click="updateClicked(role.id, role.role, role.logo_url, role.primary_function, role.key_attributes)">Update</button>
                             &nbsp;
-                            <button class="w3-btn w3-blue" @click="deleteClicked(role.id)">Delete</button>
+                            <button :id="'btnDeleteRole' + role.id" class="w3-btn w3-blue" @click="deleteClicked(role.id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>

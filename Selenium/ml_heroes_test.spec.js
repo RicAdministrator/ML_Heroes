@@ -7,15 +7,31 @@ describe("ML Heroes UI", function () {
     let driver;
 
     // navigation
-    let lnkRoles;
+    let lnkHeroes, lnkRoles;
 
-    // roles page
-    let numRoles;
+    // heroes page
+    let lnkAddHero;
+    let numHeroes;
+    let tdHeroName7, tdHeroName7Text;
+    let tdHeroRoles7, tdHeroRoles7Text;
+    let tdHeroDescription7, tdHeroDescription7Text;
+    let btnUpdateHero7, btnDeleteHero7;
+    let pHeroSaveError, pHeroSaveErrorText;
+    let h2HeroUpsert, h2HeroUpsertText;
+    let txtHeroName, txtHeroImageURL, txtHeroDescription;
+    let txtHeroNameMaxLength, txtHeroImageURLMaxLength, txtHeroDescriptionMaxLength;
+    let chkAssassin, chkMarksman;
+    let btnSaveHero, btnCancelHero;
+
+    // roles page    
     let lnkAddRole;
+    let pRoleDeleteMsg, pRoleDeleteMsgText;
+    let numRoles;
     let tdRolesRole6, tdRolesRole6Text;
     let tdRolesPrimaryFunction6, tdRolesPrimaryFunction6Text;
     let tdRolesKeyAttributes6, tdRolesKeyAttributes6Text;
-    let btnUpdateRole6;
+    let btnUpdateRole1, btnDeleteRole1;
+    let btnUpdateRole6, btnDeleteRole6;
     let pRoleSaveError, pRoleSaveErrorText;
     let h2Upsert, h2UpsertText;
     let txtRole, txtLogoURL, txtPrimaryFunction, txtKeyAttributes;
@@ -38,6 +54,7 @@ describe("ML Heroes UI", function () {
     });
 
     after(async function () {
+        await driver.sleep(2000);
         if (driver) await driver.quit();
     });
 
@@ -45,12 +62,15 @@ describe("ML Heroes UI", function () {
         lnkRoles = await driver.wait(until.elementLocated(By.id('lnkRoles')), 3000);
         await lnkRoles.click();
         await driver.sleep(2000);
+
         numRoles = (await driver.findElements(By.css('#tblRoles > tbody > tr'))).length;
         assert.ok(numRoles === 5);
     });
 
     it("set role control variables", async function () {
         lnkAddRole = await driver.wait(until.elementLocated(By.id('lnkAddRole')), 3000);
+        pRoleDeleteMsg = await driver.wait(until.elementLocated(By.id('pRoleDeleteMsg')), 3000);
+        btnDeleteRole1 = await driver.wait(until.elementLocated(By.id('btnDeleteRole1')), 3000);
         pRoleSaveError = await driver.wait(until.elementLocated(By.id('pRoleSaveError')), 3000);
         h2Upsert = await driver.wait(until.elementLocated(By.id('h2Upsert')), 3000);
         txtRole = await driver.wait(until.elementLocated(By.id('txtRole')), 3000);
@@ -64,6 +84,7 @@ describe("ML Heroes UI", function () {
     it("click add role and validate upsert label", async function () {
         await lnkAddRole.click();
         await driver.sleep(2000);
+
         h2UpsertText = await h2Upsert.getText();
         assert.ok(h2UpsertText === "Add Role");
     });
@@ -161,7 +182,7 @@ describe("ML Heroes UI", function () {
         await txtRole.clear();
         await txtRole.sendKeys('u - Support');
         await driver.sleep(2000);
-        
+
         await txtPrimaryFunction.clear();
         await txtPrimaryFunction.sendKeys('u - Supports focus on protecting and enabling their teammates, providing heals, shields, and crowd control.');
         await driver.sleep(2000);
@@ -186,30 +207,197 @@ describe("ML Heroes UI", function () {
         assert.ok(tdRolesKeyAttributes6Text === "u - Utility abilities (healing, shielding, crowd control), map awareness, and the ability to assist teammates in farming and securing kills.");
     });
 
-    it("count hero rows", async function () {
+    it("delete role validation", async function () {
+        await btnDeleteRole1.click();
+        await driver.sleep(2000);
 
+        pRoleDeleteMsgText = await pRoleDeleteMsg.getText();
+        assert.ok(pRoleDeleteMsgText === "This role is assigned to one or more heroes. Please remove the role from the heroes before deleting it.");
+    });
 
+    it("successful delete of role", async function () {
+        btnDeleteRole6 = await driver.wait(until.elementLocated(By.id('btnDeleteRole6')), 3000);
+        await btnDeleteRole6.click();
+        await driver.sleep(2000);
 
-        /*
+        numRoles = (await driver.findElements(By.css('#tblRoles > tbody > tr'))).length;
+        assert.ok(numRoles === 5);
+    });
 
-        await driver.wait(async () => (await driver.findElements(By.css('#tblHeroes > tbody > tr'))).length > 0, 5000);
-        const numHeroes = (await driver.findElements(By.css('#tblHeroes > tbody > tr'))).length;
+    it("navigate to heroes page and count existing heroes", async function () {
+        lnkHeroes = await driver.wait(until.elementLocated(By.id('lnkHeroes')), 3000);
+        await lnkHeroes.click();
+        await driver.sleep(2000);
 
-        //console.log(count);
+        numHeroes = (await driver.findElements(By.css('#tblHeroes > tbody > tr'))).length;
+        assert.ok(numHeroes === 6);
+    });
 
-        assert.ok(numHeroes === 6); // or a stronger check
+    it("set hero control variables", async function () {
+        lnkAddHero = await driver.wait(until.elementLocated(By.id('lnkAddHero')), 3000);
+        pHeroSaveError = await driver.wait(until.elementLocated(By.id('pHeroSaveError')), 3000);
+        h2HeroUpsert = await driver.wait(until.elementLocated(By.id('h2HeroUpsert')), 3000);
+        txtHeroName = await driver.wait(until.elementLocated(By.id('txtHeroName')), 3000);
+        txtHeroImageURL = await driver.wait(until.elementLocated(By.id('txtHeroImageURL')), 3000);
+        txtHeroDescription = await driver.wait(until.elementLocated(By.id('txtHeroDescription')), 3000);
+        chkAssassin = await driver.wait(until.elementLocated(By.id('chkAssassin')), 3000);
+        chkMarksman = await driver.wait(until.elementLocated(By.id('chkMarksman')), 3000);
+        btnSaveHero = await driver.wait(until.elementLocated(By.id('btnSaveHero')), 3000);
+        btnCancelHero = await driver.wait(until.elementLocated(By.id('btnCancelHero')), 3000);
+    });
 
-        */
+    it("click add hero and validate upsert label", async function () {
+        await lnkAddHero.click();
+        await driver.sleep(2000);
 
-        // ensure the page has fully loaded (document.readyState === 'complete')
-        await driver.wait(async () => {
-            const readyState = await driver.executeScript('return document.readyState');
-            return readyState === 'complete';
-        }, 5000);
+        h2HeroUpsertText = await h2HeroUpsert.getText();
+        assert.ok(h2HeroUpsertText === "Add Hero");
+    });
 
-        // pause briefly so you can visually inspect the browser during debugging
-        await driver.sleep(2000); // 5 seconds
+    it("check create hero maxlengths", async function () {
+        txtHeroNameMaxLength = await txtHeroName.getAttribute('maxlength');
+        txtHeroImageURLMaxLength = await txtHeroImageURL.getAttribute('maxlength');
+        txtHeroDescriptionMaxLength = await txtHeroDescription.getAttribute('maxlength');
 
+        assert.ok(txtHeroNameMaxLength === "50");
+        assert.ok(txtHeroImageURLMaxLength === "150");
+        assert.ok(txtHeroDescriptionMaxLength === "150");
+    });
 
+    it("hero create validations", async function () {
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+
+        pHeroSaveErrorText = await pHeroSaveError.getText();
+        assert.ok(pHeroSaveErrorText.includes("Name is required."));
+        assert.ok(pHeroSaveErrorText.includes("At least one role must be selected."));
+
+        await txtHeroName.sendKeys('Hanabi');
+        await driver.sleep(2000);
+
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+
+        pHeroSaveErrorText = await pHeroSaveError.getText();
+        assert.ok(pHeroSaveErrorText.includes("Hero with this name already exists."));
+        assert.ok(pHeroSaveErrorText.includes("At least one role must be selected."));
+    });
+
+    it("cancel create hero then click add hero", async function () {
+        await btnCancelHero.click();
+        await driver.sleep(2000);
+
+        await lnkAddHero.click();
+        await driver.sleep(2000);
+    });
+
+    it("create a hero", async function () {
+        await txtHeroName.sendKeys('Layla');
+        await driver.sleep(2000);
+
+        await txtHeroImageURL.sendKeys('https://akmweb.youngjoygame.com/web/svnres/img/mlbb/homepage/100_6efe9abc2047f59d45fa1c88fb1261b7.png');
+        await driver.sleep(2000);
+
+        await chkMarksman.click();
+        await driver.sleep(2000);
+
+        await txtHeroDescription.sendKeys('The backbone of the Eruditio Rangers who is also known as the Shining Star.');
+        await driver.sleep(2000);
+
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+
+        numHeroes = (await driver.findElements(By.css('#tblHeroes > tbody > tr'))).length;
+        assert.ok(numHeroes === 7);
+    });
+
+    it("click Layla update and validate upsert label", async function () {
+        btnUpdateHero7 = await driver.wait(until.elementLocated(By.id('btnUpdateHero7')), 3000);
+        await btnUpdateHero7.click();
+        await driver.sleep(2000);
+
+        h2HeroUpsertText = await h2HeroUpsert.getText();
+        assert.ok(h2HeroUpsertText === "Update Hero");
+    });
+
+    it("check update hero maxlengths", async function () {
+        txtHeroNameMaxLength = await txtHeroName.getAttribute('maxlength');
+        txtHeroImageURLMaxLength = await txtHeroImageURL.getAttribute('maxlength');
+        txtHeroDescriptionMaxLength = await txtHeroDescription.getAttribute('maxlength');
+
+        assert.ok(txtHeroNameMaxLength === "50");
+        assert.ok(txtHeroImageURLMaxLength === "150");
+        assert.ok(txtHeroDescriptionMaxLength === "150");
+    });
+
+    it("hero update validations", async function () {
+        // perform backspace until no more text
+        let current = await txtHeroName.getAttribute('value');
+        while (current && current.length > 0) {
+            await txtHeroName.sendKeys(Key.BACK_SPACE);
+            await driver.sleep(50);
+            current = await txtHeroName.getAttribute('value');
+        }
+        await driver.sleep(2000);
+
+        await chkMarksman.click();
+        await driver.sleep(2000);
+
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+
+        pHeroSaveErrorText = await pHeroSaveError.getText();
+        assert.ok(pHeroSaveErrorText.includes("Name is required."));
+        assert.ok(pHeroSaveErrorText.includes("At least one role must be selected."));
+        
+        await txtHeroName.sendKeys('Hanabi');
+        await driver.sleep(2000);
+
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+        
+        pHeroSaveErrorText = await pHeroSaveError.getText();
+        assert.ok(pHeroSaveErrorText.includes("Hero with this name already exists."));
+        assert.ok(pHeroSaveErrorText.includes("At least one role must be selected."));
+    });
+
+    it("update a hero", async function () {
+        await txtHeroName.clear();
+        await txtHeroName.sendKeys('u - Layla');
+        await driver.sleep(2000);
+
+        await chkAssassin.click();
+        await driver.sleep(2000);
+
+        await chkMarksman.click();
+        await driver.sleep(2000);
+
+        await txtHeroDescription.clear();
+        await txtHeroDescription.sendKeys('u - The backbone of the Eruditio Rangers who is also known as the Shining Star.');
+        await driver.sleep(2000);
+        
+        await btnSaveHero.click();
+        await driver.sleep(2000);
+
+        tdHeroName7 = await driver.wait(until.elementLocated(By.id('tdHeroName7')), 3000);
+        tdHeroName7Text = await tdHeroName7.getText();
+        assert.ok(tdHeroName7Text === "u - Layla");
+
+        tdHeroRoles7 = await driver.wait(until.elementLocated(By.id('tdHeroRoles7')), 3000);
+        tdHeroRoles7Text = await tdHeroRoles7.getText();
+        assert.ok(tdHeroRoles7Text === "Assassin / Marksman");
+
+        tdHeroDescription7 = await driver.wait(until.elementLocated(By.id('tdHeroDescription7')), 3000);
+        tdHeroDescription7Text = await tdHeroDescription7.getText();
+        assert.ok(tdHeroDescription7Text === "u - The backbone of the Eruditio Rangers who is also known as the Shining Star.");
+    });
+
+    it("successful delete of hero", async function () {
+        btnDeleteHero7 = await driver.wait(until.elementLocated(By.id('btnDeleteHero7')), 3000);
+        await btnDeleteHero7.click();
+        await driver.sleep(2000);
+
+        numHeroes = (await driver.findElements(By.css('#tblHeroes > tbody > tr'))).length;
+        assert.ok(numHeroes === 6);
     });
 });
